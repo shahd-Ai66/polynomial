@@ -1,13 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package com.mycompany.mainapp;
-
-/**
- *
- * @author AC
- */
 public class Polynomial {
     shahdLinkedList terms;
 
@@ -73,6 +63,63 @@ public class Polynomial {
         return result;
     }
 
+    
+    public Polynomial[] divide(Polynomial divisor) {
+        if (divisor.terms.isEmpty()) {
+            throw new ArithmeticException(" Cannot divide by an empty polynomial.");
+        }
+
+        boolean isZeroDivisor = true;
+        for (int i = 0; i < divisor.terms.size(); i++) {
+            Term t = (Term) divisor.terms.getIndex(i);
+            if (t.coefficient != 0) {
+                isZeroDivisor = false;
+                break;
+            }
+        }
+
+        if (isZeroDivisor) {
+            throw new ArithmeticException(" Cannot divide by zero polynomial.");
+        }
+
+        Polynomial dividend = this.copy();
+        Polynomial quotient = new Polynomial();
+
+        while (!dividend.terms.isEmpty()) {
+            Term leadDividend = (Term) dividend.terms.getIndex(0);
+            Term leadDivisor = (Term) divisor.terms.getIndex(0);
+
+            if (leadDividend.exponent < leadDivisor.exponent) {
+                break;
+            }
+
+            int newCoef = leadDividend.coefficient / leadDivisor.coefficient;
+            int newExpo = leadDividend.exponent - leadDivisor.exponent;
+
+            quotient.addTerm(newCoef, newExpo);
+
+            Polynomial subtractPart = new Polynomial();
+            for (int i = 0; i < divisor.terms.size(); i++) {
+                Term t = (Term) divisor.terms.getIndex(i);
+                subtractPart.addTerm(t.coefficient * newCoef, t.exponent + newExpo);
+            }
+
+            dividend = dividend.subtract(subtractPart);
+        }
+
+        return new Polynomial[]{quotient, dividend};
+    }
+
+    
+    public Polynomial copy() {
+        Polynomial copy = new Polynomial();
+        for (int i = 0; i < this.terms.size(); i++) {
+            Term t = (Term) this.terms.getIndex(i);
+            copy.addTerm(t.coefficient, t.exponent);
+        }
+        return copy;
+    }
+
     public int evaluate(int x) {
         int result = 0;
         for (int i = 0; i < terms.size(); i++) {
@@ -106,6 +153,7 @@ public class Polynomial {
         return sb.toString().trim();
     }
 
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < terms.size(); i++) {
@@ -115,6 +163,4 @@ public class Polynomial {
         }
         return sb.toString();
     }
-
-    
 }
