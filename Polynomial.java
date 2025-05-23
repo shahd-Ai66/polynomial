@@ -65,7 +65,7 @@ public class Polynomial {
 
     public Polynomial[] divide(Polynomial divisor) {
         if (divisor.terms.isEmpty()) {
-            throw new ArithmeticException("❌ Cannot divide by an empty polynomial.");
+            throw new ArithmeticException(" Cannot divide by an empty polynomial.");
         }
 
         boolean isZeroDivisor = true;
@@ -78,7 +78,7 @@ public class Polynomial {
         }
 
         if (isZeroDivisor) {
-            throw new ArithmeticException("❌ Cannot divide by a zero polynomial.");
+            throw new ArithmeticException(" Cannot divide by a zero polynomial.");
         }
 
         Polynomial dividend = this.copy();
@@ -87,6 +87,9 @@ public class Polynomial {
         while (!dividend.terms.isEmpty()) {
             Term leadDividend = (Term) dividend.terms.getIndex(0);
             Term leadDivisor = (Term) divisor.terms.getIndex(0);
+
+            
+            System.out.println(" Current Dividend: " + dividend);
 
             if (leadDividend.exponent < leadDivisor.exponent) {
                 break;
@@ -103,7 +106,16 @@ public class Polynomial {
                 subtractPart.addTerm(t.coefficient * newCoef, t.exponent + newExpo);
             }
 
-            dividend = dividend.subtract(subtractPart);
+            System.out.println(" Subtracting: " + subtractPart);
+
+            Polynomial newDividend = dividend.subtract(subtractPart);
+
+            if (newDividend.toString().equals(dividend.toString())) {
+                System.out.println(" No progress in division. Exiting loop to prevent infinite repetition.");
+                break;
+            }
+
+            dividend = newDividend;
         }
 
         return new Polynomial[]{quotient, dividend};
@@ -162,4 +174,3 @@ public class Polynomial {
         return sb.toString();
     }
 }
-
