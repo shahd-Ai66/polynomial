@@ -63,10 +63,9 @@ public class Polynomial {
         return result;
     }
 
-    
     public Polynomial[] divide(Polynomial divisor) {
         if (divisor.terms.isEmpty()) {
-            throw new ArithmeticException(" Cannot divide by an empty polynomial.");
+            throw new ArithmeticException("❌ Cannot divide by an empty polynomial.");
         }
 
         boolean isZeroDivisor = true;
@@ -79,7 +78,7 @@ public class Polynomial {
         }
 
         if (isZeroDivisor) {
-            throw new ArithmeticException(" Cannot divide by zero polynomial.");
+            throw new ArithmeticException("❌ Cannot divide by a zero polynomial.");
         }
 
         Polynomial dividend = this.copy();
@@ -110,7 +109,6 @@ public class Polynomial {
         return new Polynomial[]{quotient, dividend};
     }
 
-    
     public Polynomial copy() {
         Polynomial copy = new Polynomial();
         for (int i = 0; i < this.terms.size(); i++) {
@@ -164,3 +162,4 @@ public class Polynomial {
         return sb.toString();
     }
 }
+
